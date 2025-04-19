@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    var username = Context.Session.GetString("Username");
+}
+
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="row w-100">
+        <div class="col-md-8 offset-md-2 text-center">
+            <h1 class="mb-4">Hello, @username </h1>
+            <p class="text-muted mb-4">Welcome to the admin panel. Here you can manage the system, add users, and review operations.</p>
+
+            <a class="btn btn-primary btn-lg" asp-action="Logout">Logout</a>
+        </div>
+    </div>
+</div>
+
