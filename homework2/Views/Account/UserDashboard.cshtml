@@ -1,6 +1,6 @@
 ﻿@model homework2.Models.User
 @{
-    ViewData["Title"] = "لوحة المستخدم";
+    ViewData["Title"] = "User Dashboard";
     var username = Context.Session.GetString("Username");
 }
 
@@ -9,54 +9,54 @@
         <div class="col-md-8">
             <div class="card shadow-lg border-0 rounded-4">
                 <div class="card-body p-5">
-                    <h2 class="text-center mb-4">أهلاً، @username 🙋‍♂️</h2>
-                    <p class="text-center text-muted mb-4">يمكنك عرض وتحديث معلوماتك الشخصية هنا.</p>
+                    <h2 class="text-center mb-4">Hello, @username 🙋‍♂️</h2>
+                    <p class="text-center text-muted mb-4">You can view and update your personal information here.</p>
 
                     <form asp-action="UpdateProfile" method="post" novalidate>
                         <input type="hidden" name="Username" value="@username" />
-                       
                         <input type="hidden" name="Email" value="@Model.Email" />
                         <input type="hidden" name="PasswordHash" value="@Model.PasswordHash" />
                         <input type="hidden" name="Role" value="@Model.Role" />
+
                         <div class="row mb-3">
                             <div class="col">
-                                <label class="form-label">الاسم الأول</label>
-                                <input asp-for="FirstName" class="form-control form-control-lg" placeholder="أدخل الاسم الأول" />
+                                <label class="form-label">First Name</label>
+                                <input asp-for="FirstName" class="form-control form-control-lg" placeholder="Enter first name" />
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                             <div class="col">
-                                <label class="form-label">الاسم الأخير</label>
-                                <input asp-for="LastName" class="form-control form-control-lg" placeholder="أدخل الاسم الأخير" />
+                                <label class="form-label">Last Name</label>
+                                <input asp-for="LastName" class="form-control form-control-lg" placeholder="Enter last name" />
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">رقم الهوية</label>
-                            <input asp-for="NationalId" class="form-control form-control-lg" placeholder="أدخل رقم الهوية" />
+                            <label class="form-label">National ID</label>
+                            <input asp-for="NationalId" class="form-control form-control-lg" placeholder="Enter ID number" />
                             <span asp-validation-for="NationalId" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">رقم البطاقة الائتمانية</label>
+                            <label class="form-label">Credit Card Number</label>
                             <input asp-for="CreditCardNumber" id="card-number" class="form-control form-control-lg" placeholder="1234 5678 9012 3456" />
                             <span asp-validation-for="CreditCardNumber" class="text-danger"></span>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col">
-                                <label class="form-label">تاريخ الصلاحية (MM/YY)</label>
+                                <label class="form-label">Valid Date (MM/YY)</label>
                                 <input asp-for="ValidDate" id="valid-date" class="form-control form-control-lg" placeholder="MM/YY" />
                                 <span asp-validation-for="ValidDate" class="text-danger"></span>
                             </div>
                             <div class="col">
-                                <label class="form-label">رمز التحقق (CVC)</label>
+                                <label class="form-label">CVC</label>
                                 <input asp-for="CVC" id="cvc" class="form-control form-control-lg" placeholder="123" />
                                 <span asp-validation-for="CVC" class="text-danger"></span>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100 btn-lg mt-2">تحديث البيانات</button>
+                        <button type="submit" class="btn btn-success w-100 btn-lg mt-2">Update Profile</button>
                     </form>
 
                     @if (ViewBag.Success != null)
@@ -65,7 +65,7 @@
                     }
 
                     <div class="text-center mt-4">
-                        <a class="btn btn-outline-secondary" asp-action="Logout">تسجيل الخروج</a>
+                        <a class="btn btn-outline-secondary" asp-action="Logout">Logout</a>
                     </div>
                 </div>
             </div>
