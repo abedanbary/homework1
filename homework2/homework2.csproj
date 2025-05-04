@@ -19,9 +19,11 @@
   <ItemGroup>
     <None Remove="Data\" />
     <None Remove="Views\Account\" />
+    <None Remove="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>

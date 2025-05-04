@@ -1,16 +1,94 @@
-﻿@{
-    ViewData["Title"] = "User Dashboard";
+﻿@model homework2.Models.User
+@{
+    ViewData["Title"] = "لوحة المستخدم";
     var username = Context.Session.GetString("Username");
 }
 
-<div class="container d-flex align-items-center justify-content-center min-vh-100">
-    <div class="row w-100">
-        <div class="col-md-8 offset-md-2 text-center">
-            <h1 class="mb-4">Hello, @username 🙋‍♂️</h1>
-            <p class="text-muted mb-4">Here you can view your account information and update your personal details.</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">أهلاً، @username 🙋‍♂️</h2>
+                    <p class="text-center text-muted mb-4">يمكنك عرض وتحديث معلوماتك الشخصية هنا.</p>
 
-            <a class="btn btn-primary btn-lg" asp-action="Logout">Logout</a>
+                    <form asp-action="UpdateProfile" method="post" novalidate>
+                        <input type="hidden" name="Username" value="@username" />
+                       
+                        <input type="hidden" name="Email" value="@Model.Email" />
+                        <input type="hidden" name="PasswordHash" value="@Model.PasswordHash" />
+                        <input type="hidden" name="Role" value="@Model.Role" />
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">الاسم الأول</label>
+                                <input asp-for="FirstName" class="form-control form-control-lg" placeholder="أدخل الاسم الأول" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">الاسم الأخير</label>
+                                <input asp-for="LastName" class="form-control form-control-lg" placeholder="أدخل الاسم الأخير" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">رقم الهوية</label>
+                            <input asp-for="NationalId" class="form-control form-control-lg" placeholder="أدخل رقم الهوية" />
+                            <span asp-validation-for="NationalId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">رقم البطاقة الائتمانية</label>
+                            <input asp-for="CreditCardNumber" id="card-number" class="form-control form-control-lg" placeholder="1234 5678 9012 3456" />
+                            <span asp-validation-for="CreditCardNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">تاريخ الصلاحية (MM/YY)</label>
+                                <input asp-for="ValidDate" id="valid-date" class="form-control form-control-lg" placeholder="MM/YY" />
+                                <span asp-validation-for="ValidDate" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">رمز التحقق (CVC)</label>
+                                <input asp-for="CVC" id="cvc" class="form-control form-control-lg" placeholder="123" />
+                                <span asp-validation-for="CVC" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 btn-lg mt-2">تحديث البيانات</button>
+                    </form>
+
+                    @if (ViewBag.Success != null)
+                    {
+                        <div class="alert alert-success text-center mt-4">@ViewBag.Success</div>
+                    }
+
+                    <div class="text-center mt-4">
+                        <a class="btn btn-outline-secondary" asp-action="Logout">تسجيل الخروج</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+@section Scripts {
+    <script>document.getElementById('card-number')?.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+            e.target.value = value.replace(/(.{4})/g, '$1 ').trim();
+        });
+
+        document.getElementById('valid-date')?.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '').substring(0, 4);
+            if (value.length >= 3) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            e.target.value = value;
+        });
+
+        document.getElementById('cvc')?.addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+        });</script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

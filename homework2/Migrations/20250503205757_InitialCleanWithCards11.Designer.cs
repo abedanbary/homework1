@@ -11,8 +11,8 @@ using homework2.Data;
 namespace homework2.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250419121448_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250503205757_InitialCleanWithCards11")]
+    partial class InitialCleanWithCards11
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,30 @@ namespace homework2.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CVC")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreditCardNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NationalId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
@@ -41,6 +65,10 @@ namespace homework2.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ValidDate")
                         .IsRequired()
                         .HasColumnType("text");
 

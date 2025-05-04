@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Channels;
 
 namespace homework2.Controllers
 {
@@ -27,19 +28,53 @@ namespace homework2.Controllers
         // ======================
         // Handle Login (POST)
         // ======================
+        /* [HttpPost]
+            public async Task<IActionResult> Login(string username, string password)
+            {
+                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                {
+                    ModelState.AddModelError("", "All fields are required.");
+                    return View();
+                }
+
+                string hashedPassword = HashPassword(password);
+
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == hashedPassword);
+
+                if (user != null)
+                {
+                    HttpContext.Session.SetString("Username", user.Username);
+                    HttpContext.Session.SetString("Role", user.Role);
+
+                    if (user.Role == "Admin")
+                        return RedirectToAction("AdminDashboard");
+                    else
+                        return RedirectToAction("UserDashboard");
+                }
+
+                ModelState.AddModelError("", "Invalid login attempt.");
+                return View();
+            }
+            */
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            string sql;
+
+            // إذا كتب فقط admin بدون كلمة مرور صحيحة
+            if (username == "admin")
             {
-                ModelState.AddModelError("", "All fields are required.");
-                return View();
+                // السماح بالدخول فقط بناءً على اسم المستخدم
+                sql = $"SELECT * FROM \"Users\" WHERE \"Username\" = 'admin'";
+            }
+            else
+            {
+                // محاولة تنفيذ SQL Injection (غير آمن)
+                sql = $"SELECT * FROM \"Users\" WHERE \"Username\" = '{username}' AND \"PasswordHash\" = '{password}'";
             }
 
-            string hashedPassword = HashPassword(password);
-
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == hashedPassword);
+            var user = await _context.Users.FromSqlRaw(sql).FirstOrDefaultAsync();
 
             if (user != null)
             {
@@ -53,8 +88,9 @@ namespace homework2.Controllers
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
-            return View();
+            return View("Login");
         }
+
 
         // ======================
         // Display Register Page
@@ -196,22 +232,68 @@ namespace homework2.Controllers
         // ======================
         public IActionResult AdminDashboard()
         {
-            if (HttpContext.Session.GetString("Username") == null)
+            if (HttpContext.Session.GetString("Username") == null ||
+                HttpContext.Session.GetString("Role") != "Admin")
                 return RedirectToAction("Login");
 
-            return View();
+            var users = _context.Users.ToList();
+            return View(users);  // 👈 نرسل القائمة إلى الـ View
         }
 
-        // ======================
-        // User Dashboard
-        // ======================
+
         public IActionResult UserDashboard()
         {
-            if (HttpContext.Session.GetString("Username") == null)
+            var username = HttpContext.Session.GetString("Username");
+            if (username == null)
                 return RedirectToAction("Login");
 
-            return View();
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
+            if (user == null)
+                return RedirectToAction("Login");
+
+            return View(user); // هذا هو المهم
         }
+        [HttpPost]
+        public IActionResult UpdateProfile(User updatedUser)
+        {
+            var username = HttpContext.Session.GetString("Username");
+            if (username == null)
+                return RedirectToAction("Login");
+
+           
+
+            if (!ModelState.IsValid)
+            {
+               
+                foreach (var e in ModelState.Values.SelectMany(v => v.Errors))
+                    Console.WriteLine(e.ErrorMessage);
+
+                return View("UserDashboard", updatedUser);
+            }
+
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
+            if (user == null)
+            {
+             
+                return View("UserDashboard", updatedUser);
+            }
+
+            user.FirstName = updatedUser.FirstName?.Trim();
+            user.LastName = updatedUser.LastName?.Trim();
+            user.NationalId = updatedUser.NationalId?.Trim();
+            user.CreditCardNumber = updatedUser.CreditCardNumber?.Trim();
+            user.ValidDate = updatedUser.ValidDate?.Trim();
+            user.CVC = updatedUser.CVC?.Trim();
+
+            _context.Entry(user).State = EntityState.Modified;
+            int result = _context.SaveChanges();
+           
+
+            ViewBag.Success = "sucsees!";
+            return View("UserDashboard", user);
+        }
+
+
 
         // ======================
         // Helper: Hash Password using SHA-256
@@ -223,5 +305,6 @@ namespace homework2.Controllers
             var hash = sha256.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
         }
+
     }
 }
