@@ -28,7 +28,8 @@ namespace homework2.Controllers
         // ======================
         // Handle Login (POST)
         // ======================
-        /* [HttpPost]
+        /*
+         [HttpPost]
             public async Task<IActionResult> Login(string username, string password)
             {
                 if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
@@ -55,41 +56,35 @@ namespace homework2.Controllers
 
                 ModelState.AddModelError("", "Invalid login attempt.");
                 return View();
-            }
-            */
+            }*/
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            string sql;
-
-            // إذا كتب فقط admin بدون كلمة مرور صحيحة
-            if (username == "admin")
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                // السماح بالدخول فقط بناءً على اسم المستخدم
-                sql = $"SELECT * FROM \"Users\" WHERE \"Username\" = 'admin'";
-            }
-            else
-            {
-                // محاولة تنفيذ SQL Injection (غير آمن)
-                sql = $"SELECT * FROM \"Users\" WHERE \"Username\" = '{username}' AND \"PasswordHash\" = '{password}'";
+                ModelState.AddModelError("", "All fields are required.");
+                return View();
             }
 
-            var user = await _context.Users.FromSqlRaw(sql).FirstOrDefaultAsync();
+            string hashedPassword = HashPassword(password);
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == hashedPassword);
 
             if (user != null)
             {
                 HttpContext.Session.SetString("Username", user.Username);
                 HttpContext.Session.SetString("Role", user.Role);
 
-                if (user.Role == "Admin")
-                    return RedirectToAction("AdminDashboard");
-                else
-                    return RedirectToAction("UserDashboard");
+                return user.Role == "Admin"
+                    ? RedirectToAction("AdminDashboard")
+                    : RedirectToAction("UserDashboard");
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
             return View("Login");
         }
+
 
 
         // ======================

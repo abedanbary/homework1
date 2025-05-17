@@ -1,4 +1,44 @@
 ﻿<Properties StartupConfiguration="{E0110A83-6DB8-4251-B065-A934AECFC94F}|https">
-  <MonoDevelop.Ide.ItemProperties.homework2 FirstBuild="True" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.homework2 PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="homework2/Controllers/AccountController.cs">
+    <Files>
+      <File FileName="homework2/Program.cs" />
+      <File FileName="homework2/appsettings.json" />
+      <File FileName="homework2/Models/User.cs" />
+      <File FileName="homework2/Data/AppDbContext.cs" />
+      <File FileName="homework2/Views/Account/Register.cshtml" />
+      <File FileName="homework2/Views/Account/Login.cshtml" />
+      <File FileName="homework2/Controllers/AccountController.cs" Line="31" Column="9" />
+      <File FileName="homework2/Views/Account/ForgotPassword.cshtml" />
+      <File FileName="homework2/Views/Account/ForgotPasswordConfirmation.cshtml" />
+      <File FileName="homework2/Views/Shared/_Layout.cshtml" />
+      <File FileName="homework2/Views/Account/AdminDashboard.cshtml" />
+      <File FileName="homework2/Views/Account/UserDashboard.cshtml" />
+      <File FileName="homework2/Views/Shared/_Layout.cshtml.css" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="homework2" expanded="True">
+            <Node name="homework2">
+              <Node name="Controllers" expanded="True">
+                <Node name="AccountController.cs" selected="True" />
+              </Node>
+              <Node name="Models" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="Account" expanded="True" />
+                <Node name="Home" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
   <MultiItemStartupConfigurations />
 </Properties>
